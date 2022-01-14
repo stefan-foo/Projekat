@@ -1,0 +1,478 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    padding-left: 0;
+}
+
+button {
+    cursor: pointer;
+}
+/* BAR */
+.nav {
+    background-color: rgb(67, 60, 52);
+}
+
+.nav-elementi {
+    margin: 0px;
+}
+
+.pawn-image {
+    height: 40px;
+}
+
+.nav-elementi {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.nav-elementi li {
+    color: white;
+    text-align: center;
+    font-size: 1.4rem;
+    min-width: 10%;
+    cursor: pointer;
+}
+
+.element {
+    order: 2;
+    padding: 5px 10px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    transition: all 0.4s;
+}
+
+.element:hover{
+    background-color: rgb(93, 180, 180);
+}
+
+.prikaz {
+    height: 20px;
+    cursor: pointer;
+    display: none;
+}
+
+.prikaz-dugme {
+    background-color: rgb(231, 226, 226);
+    width: 18px;
+    height: 4px;
+    border-radius: 4px;
+    position: relative; 
+    display: inline-block;
+}
+
+.prikaz-dugme::before, .prikaz-dugme::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 4px;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: rgb(231, 226, 226);
+    left: 0
+}
+
+.prikaz-dugme::after {
+    top: 8px;
+}
+
+.prikaz-dugme::before{
+    top: -8px;
+}
+
+.page {
+    display: none;
+}
+
+div.active-page {
+    display: block;
+}
+
+@media only screen and (max-width: 480px) {
+    .prikaz {
+        display: block;
+    }
+
+    .element {
+        display: none;
+        width: 100%;
+    }
+
+    .nav-elementi {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .element.active {
+        display: block;
+    }
+
+    .prikaz {
+        display: flex;
+        align-items: center;
+    }
+}
+/* stranice */
+
+/* TURNIRI */
+.contTurnir {
+    margin: 0 8px 10px 8px;
+    border: 1px solid black;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: beige;
+}
+
+div.contTurnir:hover{
+    background-color: beige;
+}
+
+.contHeader {
+    /* background-color: beige; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    font-size: 1.2rem;
+}
+
+.contHeader:hover {
+    cursor: pointer;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.info {
+    flex: 3 1 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info li {
+    flex: 1 0 100px;
+    margin: 0 10px;
+    text-align: center;
+}
+
+.status {
+    justify-self: center;
+    height: 20px;
+    width: 20px;
+    margin: 10px;
+}
+
+.controls {
+    flex-grow: 1;
+    padding: 0 10px;
+    display: flex;
+    flex-wrap: inherit;
+    justify-content: space-around;
+}
+
+.headerBtn {
+    background-color: beige;
+    border: 1px solid rgb(93, 180, 180);
+    flex-grow: 1;
+    font-size: 1rem;
+    padding: 5px;
+    border-radius: 50em;
+    margin: 2px;
+    transition: 0.5s;
+}
+
+.controls>.headerBtn{
+    font-size: 1.1rem;
+}
+
+.headerBtn:hover{
+    transition: 0.3s;
+    background-color:rgb(93, 180, 180)
+}
+
+.status > .fas {
+    display: none; 
+}
+
+.status {
+    display: flex;
+    align-items: center;
+}
+
+.status.finished > i.fa-check-circle {
+    color: green;
+    display: inline-block;
+}
+
+.status.live > div.loading {
+    display: flex;
+}
+
+.loading::after {
+    content: "";
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: orange;
+    border-right-color: orange;
+    border-bottom-color: orange;
+    animation: rotating 1s ease infinite;
+}
+
+@keyframes rotating {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.contParticipants, .contDetails {
+    border-top: 1px dotted black;
+    overflow-x: auto;
+}
+
+.partTable, .gamesTable, .igraciTable {
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+label {
+    margin-left: 20px;
+    font-size: 1.2rempx;
+}
+
+tr:nth-child(even){
+    background-color: bisque;
+}
+
+tr:nth-child(odd){
+    background-color: thistle;
+}
+
+.contGames {
+    border-top: 1px dotted black;
+    flex-direction: column;
+}
+
+.contGamesBody {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.contGamesInfo {
+    flex: 1 1 60%;
+    overflow-x: auto;
+}
+
+.gamesTable {
+    width: 100%;
+}
+
+.contGamesDisplay{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.contGeneral {
+    border-top: 1px dotted black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.add-game-cont {
+    min-width: 30%;
+}
+
+.gamesControls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.gamesControls button.headerBtn {
+    flex-grow: 0;
+}
+
+.cont-game {
+    margin: 20px;
+    margin-bottom: 0px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.cont-board-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0px;
+}
+
+.cont-board-controls>button {
+    margin: 0 5px;
+    flex-grow: 1;
+    max-width: 20%;
+    height: 30px;
+    font-size: 1.1rem;
+}
+
+.cont-board-controls button.hideBtn {
+    flex-grow: 0;
+    color: rgb(189, 47, 47);
+    font-weight: bold;
+}
+
+.board {
+    border: 1px solid brown;
+    flex-grow: 1;
+    min-width: 320px;
+    max-width: 80%;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+}
+
+.square {
+    position: relative;
+    font-size: 2rem;
+    height: 0;
+    padding-top: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.square.light {
+    background-color: rgb(230, 223, 223);
+}
+
+.square.dark {
+    background-color: rgb(163, 142, 125);
+}
+
+@media only screen and (max-width: 600px) {
+    .board {
+        max-width: 100%;
+    }
+}
+
+.contForma button {
+    margin-bottom: 10px;
+}
+
+.form-control {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.form-control select, input, .select-player {
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+input[type=text] {
+    width: 100px;
+    transition: ease-in-out, width .35s ease-in-out;
+}
+  
+input[type=text]:focus {
+    width: 150px;
+    border: indigo;
+}
+
+.controls>button.izmeni {
+    flex-grow: 3;
+    font-size: 1rem;
+}
+
+.controls > button.fa-trash-alt {
+    color: red;
+}
+
+.controls > button.fa-trash-alt:hover {
+    color: white;
+}
+
+button.izmeni {
+    font-weight: 400;
+}
+
+.contForma > div.form {
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.contIzmeniForma {
+    justify-content: center;
+}
+
+.contIzmeniForma {
+    border-top: 1px dotted black;
+}
+
+.form-control > label {
+    flex-grow: 1;
+}
+
+select {
+    text-align: center;
+}
+
+.form-control > * {
+    flex-grow: 2;
+    margin-left: 0px;
+}
+
+div.form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+div.form > * {
+    margin: 3px;
+}
+
+button.clicked, li.clicked {
+    background-color: rgb(93, 180, 180);
+}
+
+button.clicked {
+    box-shadow: inset 0 0 0 1px white;
+}
+
+.contIgraci {
+    overflow: auto;
+}
+
+.partControls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 40px;
+    border-bottom: 1px dotted black;
+}
+
+
+.partControls > button.headerBtn {
+    flex-grow: 0;
+}
