@@ -22,6 +22,21 @@ const pomeraj={
 
 const figuraMap={ P: 6, Q: 2, K: 1, R: 3, N: 5, B: 4}
 
+const pieceSrc={
+    "6": "images/pieces/WP.svg",
+    "12": "images/pieces/BP.svg",
+    "3": "images/pieces/WR.svg",
+    "9": "images/pieces/BR.svg",
+    "5": "images/pieces/WN.svg",
+    "11": "images/pieces/BN.svg",
+    "4": "images/pieces/WB.svg",
+    "10": "images/pieces/BB.svg",
+    "1": "images/pieces/WK.svg",
+    "7": "images/pieces/BK.svg",
+    "2": "images/pieces/WQ.svg",
+    "8": "images/pieces/BQ.svg",
+}
+
 export class Tabla {
     constructor(notacija){
         this.notacija=notacija;
@@ -57,6 +72,7 @@ export class Tabla {
         let j = 0;
         for(let i = 63; i >= 0; i--){
             square = createElement("div", board, ["square"]);
+            createElement("img", square, ["piece"]);
             square.classList.add((i+j)%2 ? "light" : "dark");
             square.setAttribute("index", i);
             if (!(i % 8)) j++;
@@ -66,10 +82,16 @@ export class Tabla {
 
     setPieces(cur){
         let square;
+        let piece;
         this.history[cur].forEach((sq,index) => {
-            square= this.container.querySelector(`[index="${index}"]`);
-            if(sq) square.innerHTML=`&#${9811+sq}`;
-            else  square.innerHTML="";
+            square = this.container.querySelector(`[index="${index}"]`);
+            piece = square.querySelector("img");
+            if (sq) { 
+                piece.src = pieceSrc[sq];
+            }
+            else {
+                piece.src = "";
+            }
         })
     }
 
@@ -77,11 +99,15 @@ export class Tabla {
         this.setPieces(--this.cur);
         if(this.cur == 0)
             this.container.querySelector(".undoBtn").disabled=true;
+        this.container.querySelector(".redoBtn").disabled=false;
     }
 
     makeMove(){
         this.cur++;
         this.container.querySelector(".undoBtn").disabled=false;
+        if (this.cur == this.potezi.length){
+            this.container.querySelector(".redoBtn").disabled=true;
+        }
         if (this.cur < this.history.length){
             this.setPieces(this.cur);
             return;
@@ -98,10 +124,7 @@ export class Tabla {
         let after = potez.naPolje;
         this.history[this.cur][after]=this.history[this.cur][before];
         this.history[this.cur][before]=0;
-        before = this.container.querySelector(`[index="${before}"]`);
-        after = this.container.querySelector(`[index="${after}"]`);
-        after.innerHTML= before.innerHTML;
-        before.innerHTML="";
+        this.setPieces(this.cur);
     }
 
     drawControls(parent){
@@ -112,7 +135,11 @@ export class Tabla {
         btn = createElInner("button", ">>", cntCont, ["redoBtn"]);
         btn.onclick=(ev)=>this.makeMove();
         btn = createElInner("button", "-", cntCont, ["hideBtn"]);
-        btn.onclick=(ev)=>{ this.container.parentNode.style.display="none"; }
+        btn.onclick=(ev) => this.detach();
+    }
+    
+    detach(){
+        if (this.container) this.container.parentNode.style.display="none"; 
     }
 
     renew(container){

@@ -5,6 +5,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-image: linear-gradient(to right, rgb(230, 223, 223) 0%, rgb(163, 142, 125) 51%, rgb(230, 223, 223));
 }
 
 ul {
@@ -21,6 +22,10 @@ button {
 
 .nav-elementi {
     margin: 0px;
+}
+
+table {
+    background-color: bisque;
 }
 
 .pawn-image {
@@ -124,6 +129,27 @@ div.active-page {
 /* stranice */
 
 /* TURNIRI */
+.search-cont {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.search-input {
+    font-size: 1.2rem;
+    border: 1px solid gray;
+    height: 100%;
+    width: max(30%, 300px);
+    border-radius: 8px;
+    margin: 0 10px;
+}
+
+.search-input:focus{
+    outline: none;
+}
+
 .contTurnir {
     margin: 0 8px 10px 8px;
     border: 1px solid black;
@@ -271,7 +297,7 @@ tr:nth-child(odd){
 .contGamesBody {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
 }
 
 .contGamesInfo {
@@ -342,8 +368,8 @@ tr:nth-child(odd){
     border: 1px solid brown;
     flex-grow: 1;
     min-width: 320px;
-    max-width: 80%;
     display: grid;
+    width: 100%;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
 }
@@ -365,11 +391,52 @@ tr:nth-child(odd){
 .square.dark {
     background-color: rgb(163, 142, 125);
 }
+body > div.page.active-page > div.page-header > div > div {
+    background-color: rgba(244, 226, 198, 0.6);
+    border-radius: 20px;
+    border: 1px solid beige;
+}
+
+.form {
+    margin-right: 10px;
+}
 
 @media only screen and (max-width: 600px) {
+    .form {
+        width: 100%;
+    }
+
+    .form > * {
+        width: 100%;
+    }
+
     .board {
         max-width: 100%;
     }
+
+    .search-input {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .board {
+        max-width: 80%;
+    }
+}
+
+@media only screen and (min-width: 800px){
+    .board {
+        max-width: 60%;
+    }
+}
+
+.page-header > button {
+    margin-left: 8px;
+}
+
+.contForma {
+    margin-left: 10px;
 }
 
 .contForma button {
@@ -381,6 +448,7 @@ tr:nth-child(odd){
     align-items: center;
     font-size: 1.2rem;
     flex-wrap: wrap;
+    padding: 2px 10px;
 }
 
 .form-control select, input, .select-player {
@@ -404,11 +472,12 @@ input[type=text]:focus {
     font-size: 1rem;
 }
 
-.controls > button.fa-trash-alt {
+.controls > button.fa-trash-alt, td > button.fas {
+    border-radius: 50em;
     color: red;
 }
 
-.controls > button.fa-trash-alt:hover {
+.controls > button.fa-trash-alt:hover, td > button.fas:hover {
     color: white;
 }
 

@@ -24,41 +24,6 @@ export function createInputForm(lblval, type, parent, cls){
     return input;
 }
 
-export function crtajFormu(contForma){
-    const forma = createElement("div", contForma, ["form"]);
-
-    let lbl, input, row;
-    input = createInputForm("Naziv: ", "text", forma, ["form-control"]);
-    input.className="naziv";
-
-    let datumi = ["Pocetak", "Kraj"];
-    datumi.forEach(el => { 
-        input = createInputForm(`${el}: `, "date", forma, ["form-control"]);
-        input.className = el.toLowerCase();
-    });
-
-    row = createElement("div", forma, ["form-control"]);
-    lbl = createElInner("label", "Drzava odrzavanja: ", row);
-    lbl.type = "text";
-    let select = createElement("select", row);
-    fetch("https://localhost:5001/Drzava/Preuzmi")
-        .then(p => {
-            p.json().then(drzave => {
-                drzave.forEach(dr => {
-                    input = createElInner("option", dr.naziv, select);
-                    input.value = dr.drzavaID;
-                })
-            });
-    })
-    input = createInputForm("Broj rundi: ", "number", forma, ["form-control"]);
-    input.className = 'broj-rundi';
-    input = createInputForm("Vremenska kontrola: ", "text", forma, ["form-control"]);
-    input.placeholder = '30|15+15';
-    input.className = 'vremenska-kontrola';
-
-    createElement("button", forma, ["submit-btn", "headerBtn"]);
-}
-
 export function dateDisplayFormat(date){
     if (date instanceof Date) {
         return date.getFullYear() + "-" 

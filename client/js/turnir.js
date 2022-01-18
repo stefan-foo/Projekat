@@ -1,4 +1,4 @@
-import { buttonClicked, createElement, crtajFormu, dateDisplayFormat } from "./helpers.js";
+import { buttonClicked, createElement, dateDisplayFormat } from "./helpers.js";
 import { createElInner } from "./helpers.js";
 import { Partija } from "./partija.js";
 import { StranicaSahisti } from "./stranicaSahisti.js";
@@ -6,10 +6,11 @@ import { StranicaTurniri } from "./stranicaTurniri.js";
 import { Ucesnik } from "./ucesnik.js";
 
 export class Turnir {
-    constructor(id, naziv, drzava, datumOd, datumDo, brRundi, timeControl){
+    constructor(id, naziv, drzavaID, drzava, datumOd, datumDo, brRundi, timeControl){
         this.id=id;
         this.naziv=naziv;
         this.drzava=drzava;
+        this.drzavaID=drzavaID;
         this.datumOd=new Date(datumOd);
         this.datumDo=new Date(datumDo);
         this.brRundi=brRundi;
@@ -22,6 +23,13 @@ export class Turnir {
 
     async draw(parent) {
         this.container = createElement("div", parent, ["contTurnir"]);
+        this.drawAll();
+    }
+
+    drawAll(){
+        while (this.container.firstChild){
+            this.container.firstChild.remove();
+        }
         this.drawHeader(this.container);
         this.drawDetailsBody(this.container);
         this.drawPartBody(this.container);
@@ -64,7 +72,7 @@ export class Turnir {
         details.style.display="none";
         this.drawDetailEl(details, "Pocinje: ", this.datumOd.toLocaleDateString('en-GB'));
         this.drawDetailEl(details, "Traje do: ", this.datumDo.toLocaleDateString('en-GB'));
-        this.drawDetailEl(details, "Odrzava se u: ", this.drzava);
+        this.drawDetailEl(details, "Drzava: ", this.drzava);
         this.drawDetailEl(details, "Broj rundi: ", this.brRundi);
         this.drawDetailEl(details, "Vremenska kontrola: ", this.timeControl);
         const header = parent.querySelector(".contHeader");
@@ -146,14 +154,6 @@ export class Turnir {
 
         elements[0].classList.add("beliSelect");
         elements[1].classList.add("crniSelect");
-        // await this.preuzmiUcesnike();
-
-        // this.ucesnici.forEach(uc => {
-        //     option = createElInner("option", uc.ime + " " + uc.prezime, elements[0]);
-        //     option.value = uc.id;
-        //     option = createElInner("option", uc.ime + " " + uc.prezime, elements[1]);
-        //     option.value = uc.id;
-        // })
 
         row = createElement("div", formCont, ["form-control"]);
         createElInner("button", "Dodaj", row, ["headerBtn"])
@@ -177,7 +177,7 @@ export class Turnir {
     }
 
     drawModifPanel(contForma) {
-        crtajFormu(contForma);
+        StranicaTurniri.crtajFormu(contForma);
         const sacuvajBtn = contForma.querySelector("button");
         sacuvajBtn.innerHTML = "Sačuvaj izmene";
     }
@@ -200,11 +200,12 @@ export class Turnir {
         const vrem = parent.querySelector(".vremenska-kontrola");
         const brRundi = parent.querySelector(".broj-rundi");
 
+        drzava.value = this.drzavaID;
         naziv.value = this.naziv;
         kraj.value = dateDisplayFormat(this.datumDo);
         pocetak.value = dateDisplayFormat(this.datumOd);
-        brRundi.value = this.brRundi;
-        vrem.value = this.timeControl;
+        if (this.brRundi) brRundi.value = this.brRundi;
+        if (this.timeControl) vrem.value = this.timeControl;
 
         parent.querySelector("button").onclick = (ev) => this.izmeniTurnir({ 
             naziv, pocetak, kraj, drzava, vrem, brRundi
@@ -240,7 +241,20 @@ export class Turnir {
                 })
             }).then(res => {
                 if (res.ok){
-                    location.reload();
+                    res.json().then(tr => {
+                        this.naziv = tr.naziv, 
+                        this.drzavaID = tr.drzavaID, 
+                        this.drzava = tr.drzava,
+                        this.datumOd = new Date(tr.datumOd), 
+                        this.datumDo = new Date(tr.datumDo), 
+                        this.brRundi = tr.brojRundi,
+                        this.timeControl = tr.timeControl;
+                        this.drawAll();
+                        this.ucesniciPreuzeti = false;
+                        this.preuzmiUcesnike();
+                        this.partijePreuzete = false;
+                        this.preuzmiPartije();
+                    });
                 }
                 else 
                 {
@@ -257,7 +271,6 @@ export class Turnir {
             if (!validation.res){
                 return reject(validation.msg);
             }
-            let novi = new Turnir(null, naziv, drzava, pocetak, kraj, brRundi, vrem);
             fetch("https://localhost:5001/Turnir/DodajTurnir", {
                 method: "POST",
                 headers: {
@@ -269,10 +282,10 @@ export class Turnir {
                 })
             }).then(res => {
                 if (res.ok){
-                    res.json().then(inf => {
-                        novi.id = inf.id;
-                        console.log(novi);
-                        return resolve(novi);
+                    res.json().then(tr => {
+                        return resolve(new Turnir(tr.id, tr.naziv, tr.drzavaID, 
+                                                tr.drzava, tr.datumOd, tr.datumDo, 
+                                                tr.brojRundi, tr.timeControl));
                     })
                 }
                 else 
@@ -291,6 +304,7 @@ export class Turnir {
             .then(resp => {
                 if(resp.ok) {
                     this.container.parentNode.removeChild(this.container);
+                    this.container=null;
                 }
                 else
                     alert("Doslo je do greske");
@@ -328,6 +342,8 @@ export class Turnir {
                 alert(`${msg}`)
                 this.partijePreuzete = false;
                 this.preuzmiPartije();
+                this.ucesniciPreuzeti = false;
+                this.preuzmiUcesnike();
             })
             .catch(msg => {
                 alert(`${msg}`)
@@ -355,6 +371,7 @@ export class Turnir {
     }
 
     dodajUcesnika(ucesnikID){
+        if (!ucesnikID) return;
         Ucesnik.dodajUcesnika(this.id, ucesnikID)
         .then(() => {
             this.ucesniciPreuzeti = false;
@@ -411,9 +428,9 @@ export class Turnir {
             .then(p => p.json())
             .then(data => {
                 data.forEach((pa) => {
-                    partija = new Partija(pa.beliIme, pa.beliPrezime, 
+                    partija = new Partija(pa.id, pa.beliIme, pa.beliPrezime, 
                         pa.crniIme, pa.crniPrezime, pa.ishod, pa.runda, 
-                        pa.brPoteza, pa.notacija);
+                        pa.brPoteza, pa.notacija, this);
                     partija.draw(body);
                 })
             });
@@ -468,5 +485,10 @@ export class Turnir {
             res : true,
             msg : "Validacija uspesna"
         };
+    }
+
+    detach(){
+        if (this.container)
+            this.container.parentNode.removeChild(this.container);
     }
 }

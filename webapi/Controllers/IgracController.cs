@@ -36,19 +36,5 @@ namespace Backend.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        [HttpGet]
-        [Route("PreuzmiOsnovno")]
-        public async Task<ActionResult> PreuzmiOsnovno(){
-            try {
-                return Ok(await Context.Igraci.Select(p => new {
-                    ID = p.IgracID,
-                    Ime = p.Ime + " " + p.Prezime
-                }).ToListAsync());
-            }
-            catch(Exception e){
-                return BadRequest(e.Message);
-            }
-        }
     }
 }

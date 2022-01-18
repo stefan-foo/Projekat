@@ -2,7 +2,8 @@ import { buttonClicked, createElInner } from "./helpers.js";
 import { createElement } from "./helpers.js";
 import { Tabla } from "./tabla.js";
 export class Partija {
-    constructor(bIme, bPrezime, cIme, cPrezime, ishod, runda, brPoteza, notacija){
+    constructor(id, bIme, bPrezime, cIme, cPrezime, ishod, runda, brPoteza, notacija, turnir){
+        this.id = id;
         this.bIme=bIme;
         this.bPrezime=bPrezime;
         this.cIme=cIme;
@@ -11,13 +12,14 @@ export class Partija {
         this.runda=runda;
         this.brPoteza=brPoteza;
         this.notacija=notacija;
+        this.turnir = turnir;
         this.tabla=new Tabla(notacija);
         this.container=null;
     }
 
     draw(parent){
         if(!parent) return;
-        const row = createElement("tr", parent);
+        let row = createElement("tr", parent);
         this.container = row;
         const beli = this.bIme[0]+". "+this.bPrezime;
         const crni = this.cIme[0]+". "+this.cPrezime;
@@ -25,19 +27,39 @@ export class Partija {
         createElInner("td", this.ishod, row);
         createElInner("td", this.runda, row);
         createElInner("td", this.brPoteza, row);
-        const btn = createElInner("button", "Prikaz", createElement("td", row), ["headerBtn"]);
+        let td = createElement("td", row);
+        const delbtn = createElement("button", td, ["fas", "fa-trash-alt", "headerBtn"]);
+        const btn = createElInner("button", "Prikaz", td, ["headerBtn"]);
         btn.onclick = (ev) => {
             btn.parentNode.parentNode.parentNode
                 .querySelector("button.clicked")?.classList.remove("clicked");
             buttonClicked(ev); 
             this.drawGame(parent.parentNode.parentNode.parentNode);
         }
+        delbtn.onclick = (ev) => this.ukloniPartiju();
     }
 
     drawGame(parent){
         const cont = parent.querySelector(".contGamesDisplay");
         cont.style.display="flex";
         this.tabla.draw(cont);
+    }
+
+    ukloniPartiju(){
+        if(!confirm("Da li ste sigurni da zelite da obriste partiju")) return;
+        fetch(`https://localhost:5001/Turnir/UkloniPartiju/${this.id}`, {
+            method: "DELETE"
+        }).then(res => {
+            if (res.ok){
+                this.tabla.detach();
+                this.container.parentNode.removeChild(this.container);
+                this.turnir.ucesniciPreuzeti = false;
+                this.turnir.preuzmiUcesnike();
+            }
+            else {
+                alert("Doslo je do greske");
+            }
+        })
     }
 
     static dodajPartiju(partija){

@@ -7,9 +7,9 @@ const bar = createElement("div", document.body, ["nav"]);
 const turniriStr = createElement("div", document.body, ["page", "active-page"]);
 const sahistiStr = createElement("div", document.body, ["page"]);
 const pages = [turniriStr, sahistiStr]
-createNav();
+const navElementi = createNav();
 const turniri = new StranicaTurniri(turniriStr);
-turniri.fetch();
+//turniri.fetch();
 const sahisti = new StranicaSahisti(sahistiStr);
 sahisti.fetch();
 
@@ -32,6 +32,7 @@ function createNav(){
                 el.classList.add("active");
         })
     }
+    return elements;
 }
 
 function swap(ev, show){
