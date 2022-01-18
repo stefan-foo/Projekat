@@ -13,6 +13,7 @@ namespace Models {
         [MaxLength(30)]
         [Required]
         public string Prezime { get; set; }
+        [JsonIgnore]
         public Drzava Drzava { get; set; }
         [Range(100, 3500)]
         public int BlitzRating { get; set; }
@@ -20,7 +21,6 @@ namespace Models {
         public int ClassicalRating { get; set; }
         [Range(100, 3500)]
         public int RapidRating { get; set; }
-        [JsonIgnore]
         public List<Ucesnik> Ucesnik { get; set; }
         [JsonIgnore]
         public List<Partija> PBeli { get; set; }

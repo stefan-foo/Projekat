@@ -111,7 +111,7 @@ export class Turnir {
     }
 
     drawControls(parent){
-        const types = ["Ucesnici", "Partije"];
+        const types = ["Učesnici", "Partije"];
         let btn = null;
         types.forEach((el, index) => {
             btn = createElement("button", parent, ["headerBtn"]);

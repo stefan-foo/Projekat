@@ -65,6 +65,8 @@ namespace Backend.Controllers
                     .Include(u => u.Turnir)
                     .Include(u => u.Igrac)
                     .ThenInclude(i => i.Titula)
+                    .Include(u => u.Igrac)
+                    .ThenInclude(i => i.Drzava)
                     .Where(u => u.Turnir.TurnirID == turnir.TurnirID).ToListAsync();
                 return Ok (
                     ucesnici.Select(u => new {
@@ -72,7 +74,7 @@ namespace Backend.Controllers
                         Titula = u.Igrac.Titula.Title,
                         Ime = u.Igrac.Ime,
                         Prezime = u.Igrac.Prezime,
-                        Drzava = u.Igrac.Drzava,
+                        Drzava = u.Igrac.Drzava?.Naziv,
                         Mesto = u.Mesto,
                         Bodovi = u.Bodovi
                     }).ToList()
@@ -233,10 +235,10 @@ namespace Backend.Controllers
             if (String.IsNullOrEmpty(partija.Notacija))
                 return BadRequest("Notacija ne moze biti prazna");
 
-            var beli = await Context.Igraci.FindAsync(partija.BeliIgracID);
-            var crni = await Context.Igraci.FindAsync(partija.CrniIgracID);
-            if (beli == null || crni == null) 
-                return BadRequest("Igrac ne postoji");
+            // var beli = await Context.Igraci.FindAsync(partija.BeliIgracID);
+            // var crni = await Context.Igraci.FindAsync(partija.CrniIgracID);
+            // if (beli == null || crni == null) 
+            //     return BadRequest("Igrac ne postoji");
 
             var turnir = await Context.Turniri.FindAsync(partija.TurnirID);
             if (turnir == null)
@@ -249,9 +251,9 @@ namespace Backend.Controllers
                 .Where(uc => uc.TurnirID == partija.TurnirID).ToListAsync();
             if (ucesnici.Count == 0) return BadRequest("Greska");
 
-            var beliUcestvuje = ucesnici.Where(uc => uc.IgracID == beli.IgracID).FirstOrDefault();
+            var beliUcestvuje = ucesnici.Where(uc => uc.IgracID == partija.BeliIgracID).FirstOrDefault();
             if (beliUcestvuje == null) return BadRequest("Beli nije ucesnik turnira");
-            var crniUcestvuje = ucesnici.Where(uc => uc.IgracID == crni.IgracID).FirstOrDefault();
+            var crniUcestvuje = ucesnici.Where(uc => uc.IgracID == partija.CrniIgracID).FirstOrDefault();
             if (crniUcestvuje == null) return BadRequest("Crni nije ucesnik turnira");
 
             if (partija.Ishod == "1-1")
