@@ -212,7 +212,7 @@ namespace Backend.Controllers
                         ID = toupdate.TurnirID, 
                         Naziv = toupdate.Naziv,
                         DrzavaID = toupdate.DrzavaID,
-                        Drzava = toupdate.Drzava.Naziv,
+                        Drzava = toupdate.Drzava?.Naziv,
                         toupdate.DatumOd, 
                         toupdate.DatumDo,
                         toupdate.BrojRundi,
