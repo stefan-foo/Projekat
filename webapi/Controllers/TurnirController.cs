@@ -197,10 +197,8 @@ namespace Backend.Controllers
             try 
             {
                 toupdate.Naziv = turnir.Naziv;
-                if (turnir.DatumDo != null)
-                    toupdate.DatumDo = turnir.DatumDo;
-                if (turnir.DatumOd != null)
-                    toupdate.DatumOd = turnir.DatumOd;
+                toupdate.DatumDo = turnir.DatumDo;
+                toupdate.DatumOd = turnir.DatumOd;
                 if (turnir.DrzavaID != null)
                     toupdate.DrzavaID = turnir.DrzavaID;
                 toupdate.TimeControl = turnir.TimeControl;
